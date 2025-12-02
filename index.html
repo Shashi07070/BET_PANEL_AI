@@ -3,1189 +3,612 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BetPanel AI</title>
-    <!-- Favicon: A sleek lightning bolt -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 9-12h-9l1-8z'/%3E%3C/svg%3E" type="image/svg+xml">
-    <!-- Use the Inter font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Load Tailwind CSS from CDN for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Pro Cricket Exchange</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --header-black: #d32f2f; /* Darker red from screenshot */
+            --bg-gray: #f2f4f7;
+            --back-blue: #72bbef;
+            --lay-pink: #faa9ba;
+            --back-blue-light: #e6f5ff;
+            --lay-pink-light: #fff0f5;
+            --text-dark: #333;
+            --green: #008000;
+            --red: #d0021b;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding-bottom: 100px;
         }
-        .card {
-            background-color: #2a2a2a;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-            cursor: pointer;
+
+        /* --- HEADER --- */
+        .app-header {
+            background: #2d2d2d;
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
         }
-        .card:hover {
-            transform: translateY(-2px);
+        .balance-badge {
+            background: #444;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
         }
-        .btn {
+
+        /* --- ADMIN PANEL --- */
+        .admin-panel {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .admin-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
+        .admin-col { flex: 1; }
+        .admin-label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }
+        .admin-input { 
+            width: 100%; padding: 8px; border: 1px solid #ccc; 
+            border-radius: 4px; box-sizing: border-box; font-family: inherit; 
+        }
+        h3 { margin: 0 0 10px 0; font-size: 14px; color: #555; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+
+        /* --- MARKET CARD STYLES (EXACT UI) --- */
+        .market-card {
+            background: white;
+            margin: 10px 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* The Red Tag Shape */
+        .market-title-tag {
+            background-color: var(--header-red);
+            color: white;
+            padding: 5px 15px 5px 10px;
+            font-weight: 700;
+            font-size: 16px;
+            position: relative;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
             display: flex;
             align-items: center;
+            min-width: 120px;
+        }
+
+        .cashout-pill {
+            background: #bd202d;
+            border: 1px solid white;
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .market-info {
+            font-size: 11px;
+            color: #666;
+            padding-right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .info-icon {
+            background: #bd202d;
+            color: white;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 14px;
+            font-weight: bold;
+        }
+
+        /* Sub Headers (Back/Lay) */
+        .sub-header {
+            display: flex;
+            padding: 5px 10px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .empty-col { flex: 1; } /* Space for team name */
+        .odds-header { 
+            width: 110px; /* Width of two buttons */
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        /* Runner Row */
+        .runner-row {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+            min-height: 60px;
+        }
+        .runner-info {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            transition: background-color 0.2s;
         }
-        .sidebar-item {
+        .runner-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .pnl {
+            font-size: 12px;
+            margin-top: 2px;
+            font-weight: 700;
+        }
+        .green { color: var(--green); }
+        .red { color: var(--red); }
+
+        .odds-container {
             display: flex;
+        }
+        .odds-box {
+            width: 55px;
+            height: 100%;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 1rem 1.5rem;
-            gap: 1rem;
-            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            margin-left: 1px;
         }
-        .sidebar-item:hover {
-            background-color: #3b3b3b;
+        .back-box { background-color: var(--back-blue); }
+        .lay-box { background-color: var(--lay-pink); }
+        
+        .price { font-size: 18px; font-weight: 700; color: #1e1e1e; }
+        .vol { font-size: 11px; color: #333; opacity: 0.8; }
+
+        /* Footer Note */
+        .market-footer {
+            background: #f5f5f5;
+            color: #888;
+            font-size: 11px;
+            padding: 8px 10px;
+            text-transform: uppercase;
         }
-        .sidebar-item.active {
-            background-color: #3b3b3b;
+
+        /* --- BETSLIP POPUP --- */
+        .betslip-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); display: none; z-index: 99;
         }
-        /* Custom scrollbar for a dark theme */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .betslip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; padding: 20px;
+            border-radius: 15px 15px 0 0;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s;
         }
-        ::-webkit-scrollbar-track {
-            background: #2a2a2a;
+        .betslip.active { transform: translateY(0); }
+        
+        .slip-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 18px; font-weight: bold; }
+        .place-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 5px;
+            font-size: 16px; font-weight: bold; color: white; cursor: pointer;
         }
-        ::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 10px;
-            border: 2px solid #2a2a2a;
-        }
+        .stake-input { padding: 10px; width: 100%; font-size: 16px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <!-- Login Page Container -->
-    <div id="login-container" class="flex flex-col items-center justify-center h-full w-full">
-        <div class="text-7xl mb-8 text-white">
-            <!-- App Logo SVG -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-500 mb-4 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 9-12h-9l1-8z" />
-            </svg>
-            <h1 class="text-4xl font-bold mb-2">BetPanel AI</h1>
-            <p class="text-sm text-gray-400">Secure betting management.</p>
+<div class="app-header">
+    <div><b>CRICKET</b>EXCH</div>
+    <div class="balance-badge">PTS: <span id="main-balance">100000</span></div>
+</div>
+
+<div class="admin-panel">
+    <h3>⚙️ Operator Panel</h3>
+    
+    <div class="admin-row">
+        <div class="admin-col">
+            <label class="admin-label">Team A</label>
+            <input type="text" id="teamA_name" class="admin-input" value="Janakpur Bolts">
         </div>
-        <div class="flex flex-col gap-4">
-            <button onclick="showAdminLogin()" class="btn bg-blue-600 text-white hover:bg-blue-700 w-64">
-                Admin Login
+        <div class="admin-col">
+            <label class="admin-label">Team B</label>
+            <input type="text" id="teamB_name" class="admin-input" value="Chitwan Rhinos">
+        </div>
+    </div>
+
+    <div class="admin-row">
+        <div class="admin-col">
+            <label class="admin-label">Market Title (Editable)</label>
+            <input type="text" id="market_title_1" class="admin-input" value="MATCH ODDS">
+        </div>
+        <div class="admin-col">
+            <label class="admin-label">Team A Back (Decimal)</label>
+            <input type="number" id="mo_input" class="admin-input" value="1.90" step="0.01" oninput="calcMatchOdds()">
+        </div>
+    </div>
+
+    <div class="admin-row">
+        <div class="admin-col">
+            <label class="admin-label">Bookmaker Title</label>
+            <input type="text" id="market_title_2" class="admin-input" value="BOOKMAKER">
+        </div>
+        <div class="admin-col">
+            <label class="admin-label">Team A Back (Integer)</label>
+            <input type="number" id="bm_input" class="admin-input" value="65" oninput="calcBookmaker()">
+        </div>
+        <div class="admin-col" style="flex:0.5">
+            <button onclick="updateAll()" style="height:35px; background:#333; color:white; border:none; border-radius:4px; width:100%;">Set</button>
+        </div>
+    </div>
+</div>
+
+<div class="market-card">
+    <div class="market-header">
+        <div class="market-title-tag">
+            <span id="disp_title_1">MATCH ODDS</span>
+            <div class="cashout-pill" onclick="doCashout('MO')">CASHOUT</div>
+        </div>
+        <div class="market-info">
+            Min: 100 | Max: 10k <div class="info-icon">i</div>
+        </div>
+    </div>
+
+    <div class="sub-header">
+        <div class="empty-col"></div>
+        <div class="odds-header">
+            <span>BACK</span> <span>LAY</span>
+        </div>
+    </div>
+
+    <div class="runner-row">
+        <div class="runner-info">
+            <div class="runner-name" id="disp_teamA_1">Team A</div>
+            <div class="pnl" id="pnl_A_1">0.00</div>
+        </div>
+        <div class="odds-container">
+            <button class="odds-box back-box" onclick="openSlip('A', 'back', 'MO')">
+                <span class="price" id="mo_back_A">1.90</span>
+                <span class="vol">546k</span>
             </button>
-            <button onclick="showCreatorLogin()" class="btn bg-gray-700 text-white hover:bg-gray-800 w-64">
-                Creator Login
+            <button class="odds-box lay-box" onclick="openSlip('A', 'lay', 'MO')">
+                <span class="price" id="mo_lay_A">1.92</span>
+                <span class="vol">12k</span>
             </button>
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
-    <div id="modal-admin-login" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-[#2a2a2a] p-8 rounded-lg w-full max-w-sm">
-            <h2 class="text-xl font-bold mb-4 text-center">Admin Login</h2>
-            <p class="text-sm text-gray-400 text-center mb-4">Enter your admin credentials.</p>
-            <input id="admin-name" type="text" placeholder="Admin Name" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white mb-4 border border-gray-600 focus:outline-none focus:border-blue-500">
-            <input id="admin-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white mb-4 border border-gray-600 focus:outline-none focus:border-blue-500">
-            <div class="flex justify-end gap-2 mt-4">
-                <button onclick="closeModal('admin-login')" class="btn bg-gray-600 text-white">Cancel</button>
-                <button onclick="loginAsAdmin()" class="btn bg-blue-600 text-white">Login</button>
-            </div>
-            <p id="admin-login-error" class="text-red-500 text-sm mt-2 hidden text-center"></p>
+    <div class="runner-row">
+        <div class="runner-info">
+            <div class="runner-name" id="disp_teamB_1">Team B</div>
+            <div class="pnl" id="pnl_B_1">0.00</div>
         </div>
-    </div>
-
-    <!-- Creator Login Modal -->
-    <div id="modal-creator-login" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-[#2a2a2a] p-8 rounded-lg w-full max-w-sm">
-            <h2 class="text-xl font-bold mb-4 text-center">Creator Login</h2>
-            <input id="creator-username" type="text" placeholder="Username" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white mb-4 border border-gray-600 focus:outline-none focus:border-blue-500">
-            <input id="creator-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white mb-4 border border-gray-600 focus:outline-none focus:border-blue-500">
-            <div class="flex justify-end gap-2 mt-4">
-                <button onclick="closeModal('creator-login')" class="btn bg-gray-600 text-white">Cancel</button>
-                <button onclick="loginAsCreator()" class="btn bg-blue-600 text-white">Login</button>
-            </div>
-            <p id="creator-login-error" class="text-red-500 text-sm mt-2 hidden text-center"></p>
-        </div>
-    </div>
-
-    <!-- Main App Container - Initially hidden -->
-    <div id="app-container" class="flex h-screen w-full hidden">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-black p-6 flex flex-col justify-between overflow-y-auto">
-            <div>
-                <div class="flex items-center gap-2 mb-8">
-                    <!-- App Logo SVG -->
-                    <div class="text-blue-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 9-12h-9l1-8z" />
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold">BetPanel</div>
-                </div>
-                <nav>
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="#" id="nav-dashboard" class="sidebar-item active">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7-4h14" />
-                                </svg>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-new-match" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                </svg>
-                                <span>New Match</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-place-bet" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span>Place Bet</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-settle-match" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.03 12.03 0 003 16a12.03 12.03 0 0011 8c.846-.118 1.67-.294 2.47-.514" />
-                                </svg>
-                                <span>Settle Match</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-player-balances" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9v2.25c0 1.14-.85 2.25-2 2.25h-4c-1.15 0-2-1.11-2-2.25V9m10 0a2 2 0 00-2-2h-6a2 2 0 00-2 2m10 0h-10m10 0h-10" />
-                                </svg>
-                                <span>Player Balances</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-add-player" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9h-6M9 18v-6M4 12a8 8 0 1116 0A8 8 0 014 12z" />
-                                </svg>
-                                <span>Add Player</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="nav-record-book" class="sidebar-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h3m-3 4h3" />
-                                </svg>
-                                <span>Record Book</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="text-sm text-gray-400">
-                <div class="mb-2">Logged in as: <span id="current-user-info">N/A</span></div>
-                <div class="mb-2">User ID: <span id="user-id-info">N/A</span></div>
-                <a href="#" onclick="logout()" class="text-white hover:underline">Logout</a>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-8 overflow-y-auto">
-            <div id="content-area">
-                <!-- Content will be injected here -->
-            </div>
-        </main>
-    </div>
-
-    <!-- Creator Admin Creation Panel - Hidden by default -->
-    <div id="creator-panel" class="hidden flex flex-col h-screen w-full p-8">
-        <header class="flex justify-between items-center mb-12">
-            <h1 class="text-3xl font-bold">Creator Panel</h1>
-            <button onclick="logout()" class="btn bg-gray-700 text-white hover:bg-gray-800">
-                Logout
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h6a1 1 0 110 2H5v10h10v-5a1 1 0 112 0v6a2 2 0 01-2 2H5a2 2 0 01-2-2V4a1 1 0 011-1zm10 5a1 1 0 00-1 1v2a1 1 0 102 0V9a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
+        <div class="odds-container">
+            <button class="odds-box back-box" onclick="openSlip('B', 'back', 'MO')">
+                <span class="price" id="mo_back_B">2.08</span>
+                <span class="vol">800k</span>
             </button>
-        </header>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="card p-6">
-                <h2 class="text-xl font-bold mb-4">Create New Creator Account</h2>
-                <div class="flex flex-col gap-4">
-                    <input type="text" id="new-creator-username" placeholder="Username" class="p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                    <input type="password" id="new-creator-password" placeholder="Password" class="p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                    <button onclick="createCreator()" class="btn bg-blue-600 text-white hover:bg-blue-700">Create Creator</button>
-                </div>
-                <p id="creator-creation-status" class="mt-4 text-sm"></p>
-            </div>
-            <div class="card p-6">
-                <h2 class="text-xl font-bold mb-4">Create New Admin Account</h2>
-                <div class="flex flex-col gap-4">
-                    <input type="text" id="new-admin-username" placeholder="Username" class="p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                    <input type="password" id="new-admin-password" placeholder="Password" class="p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                    <button onclick="createAdmin()" class="btn bg-blue-600 text-white hover:bg-blue-700">Create Admin</button>
-                </div>
-                <p id="admin-creation-status" class="mt-4 text-sm"></p>
-            </div>
+            <button class="odds-box lay-box" onclick="openSlip('B', 'lay', 'MO')">
+                <span class="price" id="mo_lay_B">2.12</span>
+                <span class="vol">489k</span>
+            </button>
         </div>
-        <div class="mt-8">
-            <h2 class="text-xl font-bold mb-4">Existing Creators</h2>
-            <div id="creator-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </div>
+    <div class="market-footer">Allowed In Our Exchange</div>
+</div>
+
+<div class="market-card">
+    <div class="market-header">
+        <div class="market-title-tag">
+            <span id="disp_title_2">BOOKMAKER</span>
+            <div class="cashout-pill">CASHOUT</div>
         </div>
-        <div class="mt-8">
-            <h2 class="text-xl font-bold mb-4">Existing Admins</h2>
-            <div id="admin-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        <div class="market-info">
+            Min: 100 | Max: 50k <div class="info-icon">i</div>
         </div>
     </div>
 
-    <!-- Message Modal -->
-    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-[#2a2a2a] p-8 rounded-lg w-full max-w-sm">
-            <h2 class="text-xl font-bold mb-4" id="message-modal-title"></h2>
-            <p id="message-modal-content" class="text-gray-300"></p>
-            <div class="flex justify-end mt-4">
-                <button onclick="closeModal('message')" class="btn bg-blue-600 text-white">OK</button>
-            </div>
+    <div class="sub-header">
+        <div class="empty-col"></div>
+        <div class="odds-header">
+            <span>BACK</span> <span>LAY</span>
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <div class="runner-row">
+        <div class="runner-info">
+            <div class="runner-name" id="disp_teamA_2">Team A</div>
+            <div class="pnl" id="pnl_A_2">0.00</div>
+        </div>
+        <div class="odds-container">
+            <button class="odds-box back-box" onclick="openSlip('A', 'back', 'BM')">
+                <span class="price" id="bm_back_A">65</span>
+                <span class="vol">25k</span>
+            </button>
+            <button class="odds-box lay-box" onclick="openSlip('A', 'lay', 'BM')">
+                <span class="price" id="bm_lay_A">70</span>
+                <span class="vol">25k</span>
+            </button>
+        </div>
+    </div>
 
-        // Global variables for Firebase and app state
-        let app;
-        let db;
-        let auth;
-        let userId;
-        let isAuthReady = false;
+    <div class="runner-row">
+        <div class="runner-info">
+            <div class="runner-name" id="disp_teamB_2">Team B</div>
+            <div class="pnl" id="pnl_B_2">0.00</div>
+        </div>
+        <div class="odds-container">
+            <button class="odds-box back-box" onclick="openSlip('B', 'back', 'BM')">
+                <span class="price" id="bm_back_B">132</span>
+                <span class="vol">25k</span>
+            </button>
+            <button class="odds-box lay-box" onclick="openSlip('B', 'lay', 'BM')">
+                <span class="price" id="bm_lay_B">154</span>
+                <span class="vol">25k</span>
+            </button>
+        </div>
+    </div>
+    <div class="market-footer">Advance Match Bets Started 🏏</div>
+</div>
 
-        // User role information
-        let userRole = null;
-        let userDisplayName = 'N/A';
+<div class="betslip-overlay" id="overlay" onclick="closeSlip()"></div>
+<div class="betslip" id="betslip">
+    <div class="slip-header">
+        <span id="slip-title">Place Bet</span>
+        <span style="color:red; cursor:pointer;" onclick="closeSlip()">✕</span>
+    </div>
+    
+    <div style="margin-bottom:10px; display:flex; justify-content:space-between;">
+        <span>Odds: <b id="slip-odds">0</b></span>
+        <span id="slip-info"></span>
+    </div>
 
-        // Get the global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    <input type="number" id="stake" class="stake-input" placeholder="Stake Amount">
+    
+    <div style="display:flex; gap:5px; margin-bottom:15px;">
+        <button onclick="addStake(1000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+1k</button>
+        <button onclick="addStake(5000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+5k</button>
+        <button onclick="addStake(25000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+25k</button>
+    </div>
 
-        // Firebase Initialization
-        if (Object.keys(firebaseConfig).length > 0) {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
+    <button id="placeBtn" class="place-btn" onclick="confirmBet()">PLACE BET</button>
+</div>
 
-            // Listen for authentication state changes
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    isAuthReady = true;
+<script>
+    // --- STATE ---
+    let balance = 100000;
+    
+    let state = {
+        teamA: "Janakpur Bolts",
+        teamB: "Chitwan Rhinos",
+        mo_odds: { A_back: 1.90, A_lay: 1.92, B_back: 2.08, B_lay: 2.12 },
+        bm_odds: { A_back: 65, A_lay: 70, B_back: 132, B_lay: 154 }
+    };
 
-                    // Fetch user role and display name from Firestore
-                    const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', userId);
-                    const userDocSnap = await getDoc(userDocRef);
+    // Tracks Profit/Loss per team
+    let pnl = { A: 0, B: 0 };
 
-                    if (userDocSnap.exists()) {
-                        const userData = userDocSnap.data();
-                        userRole = userData.role;
-                        userDisplayName = userData.username;
-                    } else {
-                        // For anonymous users, treat as a regular player
-                        userRole = 'player';
-                        userDisplayName = 'Player';
-                    }
+    let selection = null; // { team: 'A', type: 'back', market: 'MO', odds: 1.9 }
 
-                    // Show the main app UI and hide login
-                    document.getElementById('login-container').classList.add('hidden');
-                    document.getElementById('app-container').classList.remove('hidden');
-                    document.getElementById('current-user-info').textContent = userDisplayName;
-                    document.getElementById('user-id-info').textContent = userId;
+    // --- LOGIC ---
+    function init() {
+        calcMatchOdds();
+        calcBookmaker();
+        render();
+    }
 
-                    // Set up Firestore listeners for real-time updates
-                    setupFirestoreListeners();
+    // 1. Calculate DECIMAL ODDS (Match Odds)
+    function calcMatchOdds() {
+        let val = parseFloat(document.getElementById('mo_input').value) || 1.01;
+        if(val < 1.01) val = 1.01;
+        
+        // Auto-calculate Team B based on probability
+        let probA = 1 / val;
+        let probB = 1 - probA;
+        let valB = 1 / probB;
 
-                    // Navigate to the default dashboard view
-                    showPage('dashboard');
+        state.mo_odds.A_back = val;
+        state.mo_odds.A_lay = val + 0.02; // Small spread
 
-                } else {
-                    // User is signed out, show login screen
-                    userId = null;
-                    isAuthReady = false;
-                    document.getElementById('login-container').classList.remove('hidden');
-                    document.getElementById('app-container').classList.add('hidden');
-                    document.getElementById('creator-panel').classList.add('hidden');
-                }
-            });
+        state.mo_odds.B_back = valB - 0.05; // Margin
+        state.mo_odds.B_lay = valB + 0.04;
+        
+        render();
+    }
 
-            // Sign in with the provided token or anonymously
-            if (initialAuthToken) {
-                signInWithCustomToken(auth, initialAuthToken).catch((error) => {
-                    console.error("Error signing in with custom token:", error);
-                    signInAnonymously(auth).catch((anonError) => {
-                        console.error("Error signing in anonymously:", anonError);
-                    });
-                });
+    // 2. Calculate BOOKMAKER ODDS (Integer with spread)
+    function calcBookmaker() {
+        let val = parseInt(document.getElementById('bm_input').value) || 0;
+        
+        // In Bookmaker:
+        // Input 65 -> Back 65. Lay = Back + Spread (e.g. 5) -> 70.
+        // Opposite team is roughly (100 - Input) * adjustment
+        
+        state.bm_odds.A_back = val;
+        state.bm_odds.A_lay = val + 5; // The "5p commission" difference you asked for
+
+        // Auto calc B roughly
+        // If A is 65 (approx 65% chance), B is approx 35ish
+        // We simulate this for the UI
+        let inverse = 100 - val; 
+        // Add some market noise
+        let valB = parseInt(inverse * 2); // Arbitrary scale for bookmaker "rate" style seen in screenshot (132 etc)
+        
+        if(valB < 0) valB = 0;
+
+        state.bm_odds.B_back = valB;
+        state.bm_odds.B_lay = valB + 6; // slightly wider spread for outsider
+
+        render();
+    }
+
+    function updateAll() {
+        state.teamA = document.getElementById('teamA_name').value;
+        state.teamB = document.getElementById('teamB_name').value;
+        document.getElementById('disp_title_1').innerText = document.getElementById('market_title_1').value;
+        document.getElementById('disp_title_2').innerText = document.getElementById('market_title_2').value;
+        calcMatchOdds();
+        calcBookmaker();
+    }
+
+    // --- RENDER UI ---
+    function render() {
+        // Names
+        ['disp_teamA_1', 'disp_teamA_2'].forEach(id => document.getElementById(id).innerText = state.teamA);
+        ['disp_teamB_1', 'disp_teamB_2'].forEach(id => document.getElementById(id).innerText = state.teamB);
+
+        // Match Odds Buttons
+        document.getElementById('mo_back_A').innerText = state.mo_odds.A_back.toFixed(2);
+        document.getElementById('mo_lay_A').innerText = state.mo_odds.A_lay.toFixed(2);
+        document.getElementById('mo_back_B').innerText = state.mo_odds.B_back.toFixed(2);
+        document.getElementById('mo_lay_B').innerText = state.mo_odds.B_lay.toFixed(2);
+
+        // Bookmaker Buttons
+        document.getElementById('bm_back_A').innerText = state.bm_odds.A_back;
+        document.getElementById('bm_lay_A').innerText = state.bm_odds.A_lay;
+        document.getElementById('bm_back_B').innerText = state.bm_odds.B_back;
+        document.getElementById('bm_lay_B').innerText = state.bm_odds.B_lay;
+
+        // PNL Colors
+        updatePnLUI('pnl_A_1', pnl.A);
+        updatePnLUI('pnl_B_1', pnl.B);
+        updatePnLUI('pnl_A_2', pnl.A);
+        updatePnLUI('pnl_B_2', pnl.B);
+
+        document.getElementById('main-balance').innerText = Math.floor(balance);
+    }
+
+    function updatePnLUI(id, val) {
+        const el = document.getElementById(id);
+        el.innerText = val >= 0 ? "+" + val.toFixed(0) : val.toFixed(0);
+        el.className = "pnl " + (val >= 0 ? "green" : "red");
+    }
+
+    // --- BETTING ---
+    function openSlip(team, type, marketType) {
+        selection = { team, type, marketType };
+        let odds = 0;
+        
+        // Determine Odds
+        if(marketType === 'MO') {
+            if(team === 'A') odds = type === 'back' ? state.mo_odds.A_back : state.mo_odds.A_lay;
+            else odds = type === 'back' ? state.mo_odds.B_back : state.mo_odds.B_lay;
+        } else {
+            // BM Logic
+            if(team === 'A') odds = type === 'back' ? state.bm_odds.A_back : state.bm_odds.A_lay;
+            else odds = type === 'back' ? state.bm_odds.B_back : state.bm_odds.B_lay;
+            
+            // For calculation purposes, Convert BM Integer to Decimal equiv if needed, 
+            // OR treat as "Rate". Usually Rate 65 means: Stake 100 wins 65.
+            // So Decimal = 1.65
+            odds = (odds / 100) + 1;
+        }
+
+        selection.odds = odds;
+
+        // UI Setup
+        const overlay = document.getElementById('overlay');
+        const slip = document.getElementById('betslip');
+        const btn = document.getElementById('placeBtn');
+        const title = document.getElementById('slip-title');
+
+        overlay.style.display = 'block';
+        setTimeout(() => slip.classList.add('active'), 10); // Anim
+
+        document.getElementById('slip-odds').innerText = marketType === 'BM' ? (odds-1)*100 : odds.toFixed(2);
+        
+        let teamName = team === 'A' ? state.teamA : state.teamB;
+        title.innerText = (type === 'back' ? "BACK " : "LAY ") + teamName;
+        
+        if(type === 'back') {
+            btn.style.backgroundColor = "var(--back-blue)";
+            title.style.color = "var(--back-blue)";
+        } else {
+            btn.style.backgroundColor = "var(--lay-pink)";
+            title.style.color = "var(--lay-pink)";
+        }
+    }
+
+    function closeSlip() {
+        const slip = document.getElementById('betslip');
+        slip.classList.remove('active');
+        setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
+    }
+
+    function addStake(amt) {
+        const el = document.getElementById('stake');
+        let curr = parseFloat(el.value) || 0;
+        el.value = curr + amt;
+    }
+
+    function confirmBet() {
+        const stake = parseFloat(document.getElementById('stake').value);
+        if(!stake || stake <= 0) return;
+
+        // Simple PnL Logic
+        // Back A: A(+Profit), B(-Stake)
+        // Lay A: A(-Liability), B(+Stake)
+        
+        let profit = stake * (selection.odds - 1);
+        let liability = profit; // For lay
+
+        if(selection.type === 'back') {
+            if(selection.team === 'A') {
+                pnl.A += profit;
+                pnl.B -= stake;
             } else {
-                signInAnonymously(auth).catch((error) => {
-                    console.error("Error signing in anonymously:", error);
-                });
+                pnl.B += profit;
+                pnl.A -= stake;
             }
         } else {
-            console.error("Firebase config is missing. The app will not be able to connect to the database.");
-            // Hide the login container and show a message if Firebase is not configured
-            document.getElementById('login-container').innerHTML = '<div class="text-center p-8 text-red-500">Firebase configuration is missing. Please ensure the app is run in a Firebase-enabled environment.</div>';
-        }
-
-        // Firestore Listeners
-        let matches = [];
-        let players = [];
-        let bets = [];
-        let recordBook = [];
-
-        function setupFirestoreListeners() {
-            if (!isAuthReady) return;
-
-            // Live listener for players
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'players'), (snapshot) => {
-                players = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Re-render pages that depend on player data to update dropdowns and balances
-                const currentPage = document.getElementById('content-area').dataset.page;
-                if (currentPage === 'new-match') renderNewMatchPage();
-                if (currentPage === 'place-bet') renderPlaceBetPage();
-                if (currentPage === 'player-balances') renderPlayerBalances();
-                if (currentPage === 'dashboard') renderDashboard();
-            }, (error) => {
-                console.error("Error fetching players:", error);
-            });
-
-            // Live listener for matches
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'matches'), (snapshot) => {
-                matches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                const currentPage = document.getElementById('content-area').dataset.page;
-                if (currentPage === 'dashboard') renderDashboard();
-                if (currentPage === 'place-bet') renderPlaceBetPage();
-                if (currentPage === 'settle-match') renderSettleMatchPage();
-            }, (error) => {
-                console.error("Error fetching matches:", error);
-            });
-
-            // Live listener for bets
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'bets'), (snapshot) => {
-                bets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                const currentPage = document.getElementById('content-area').dataset.page;
-                if (currentPage === 'dashboard') renderDashboard();
-            }, (error) => {
-                console.error("Error fetching bets:", error);
-            });
-
-            // Live listener for record book
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'recordBook'), (snapshot) => {
-                recordBook = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                const currentPage = document.getElementById('content-area').dataset.page;
-                if (currentPage === 'record-book') renderRecordBook();
-            }, (error) => {
-                console.error("Error fetching record book:", error);
-            });
-        }
-
-        // UI Functions
-        function showPage(pageId) {
-            const contentArea = document.getElementById('content-area');
-            const navItems = document.querySelectorAll('.sidebar-item');
-
-            // Deactivate all nav items
-            navItems.forEach(item => item.classList.remove('active'));
-
-            // Set the active nav item
-            const activeNavItem = document.getElementById(`nav-${pageId}`);
-            if (activeNavItem) {
-                activeNavItem.classList.add('active');
-            }
-
-            // Set the current page data attribute
-            contentArea.dataset.page = pageId;
-
-            // Clear the content area
-            contentArea.innerHTML = '';
-
-            // Render the requested page
-            switch (pageId) {
-                case 'dashboard':
-                    renderDashboard();
-                    break;
-                case 'new-match':
-                    renderNewMatchPage();
-                    break;
-                case 'place-bet':
-                    renderPlaceBetPage();
-                    break;
-                case 'settle-match':
-                    renderSettleMatchPage();
-                    break;
-                case 'player-balances':
-                    renderPlayerBalances();
-                    break;
-                case 'add-player':
-                    renderAddPlayerPage();
-                    break;
-                case 'record-book':
-                    renderRecordBook();
-                    break;
-                default:
-                    renderDashboard();
-                    break;
+            if(selection.team === 'A') {
+                pnl.A -= liability;
+                pnl.B += stake;
+            } else {
+                pnl.B -= liability;
+                pnl.A += stake;
             }
         }
 
-        // Attach event listeners for navigation
-        document.getElementById('nav-dashboard').addEventListener('click', () => showPage('dashboard'));
-        document.getElementById('nav-new-match').addEventListener('click', () => showPage('new-match'));
-        document.getElementById('nav-place-bet').addEventListener('click', () => showPage('place-bet'));
-        document.getElementById('nav-settle-match').addEventListener('click', () => showPage('settle-match'));
-        document.getElementById('nav-player-balances').addEventListener('click', () => showPage('player-balances'));
-        document.getElementById('nav-add-player').addEventListener('click', () => showPage('add-player'));
-        document.getElementById('nav-record-book').addEventListener('click', () => showPage('record-book'));
-
-        // ====================================================================
-        // LOGIN AND AUTHENTICATION LOGIC
-        // ====================================================================
-
-        function showAdminLogin() {
-            showModal('admin-login');
-        }
-
-        function showCreatorLogin() {
-            showModal('creator-login');
-        }
-
-        async function loginAsAdmin() {
-            const adminName = document.getElementById('admin-name').value;
-            const adminPassword = document.getElementById('admin-password').value;
-            const errorMessage = document.getElementById('admin-login-error');
-
-            try {
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'users'), where('username', '==', adminName));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    errorMessage.textContent = 'Invalid credentials. User not found.';
-                    errorMessage.classList.remove('hidden');
-                    return;
-                }
-
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
-                if (userData.password === adminPassword && userData.role === 'admin') {
-                    document.getElementById('login-container').classList.add('hidden');
-                    document.getElementById('creator-panel').classList.remove('hidden');
-                    userRole = 'admin';
-                    userDisplayName = adminName;
-                    closeModal('admin-login');
-                } else {
-                    errorMessage.textContent = 'Invalid credentials or not an admin.';
-                    errorMessage.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error("Error logging in as admin:", error);
-                errorMessage.textContent = 'An error occurred during login.';
-                errorMessage.classList.remove('hidden');
-            }
-        }
-
-        async function loginAsCreator() {
-            const creatorUsername = document.getElementById('creator-username').value;
-            const creatorPassword = document.getElementById('creator-password').value;
-            const errorMessage = document.getElementById('creator-login-error');
-
-            try {
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'users'), where('username', '==', creatorUsername));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    errorMessage.textContent = 'Invalid credentials. User not found.';
-                    errorMessage.classList.remove('hidden');
-                    return;
-                }
-
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
-                if (userData.password === creatorPassword && userData.role === 'creator') {
-                    document.getElementById('login-container').classList.add('hidden');
-                    document.getElementById('app-container').classList.remove('hidden');
-                    userRole = 'creator';
-                    userDisplayName = creatorUsername;
-                    closeModal('creator-login');
-                    document.getElementById('current-user-info').textContent = userDisplayName;
-                    document.getElementById('user-id-info').textContent = userDoc.id;
-                    showPage('dashboard');
-                } else {
-                    errorMessage.textContent = 'Invalid credentials or not a creator.';
-                    errorMessage.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error("Error logging in as creator:", error);
-                errorMessage.textContent = 'An error occurred during login.';
-                errorMessage.classList.remove('hidden');
-            }
-        }
-
-        async function createCreator() {
-            const username = document.getElementById('new-creator-username').value;
-            const password = document.getElementById('new-creator-password').value;
-            const statusMessage = document.getElementById('creator-creation-status');
-            statusMessage.textContent = '';
-
-            if (!username || !password) {
-                statusMessage.textContent = 'Please enter both username and password.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            try {
-                // Check if user already exists
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'users'), where('username', '==', username));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    statusMessage.textContent = 'Username already exists.';
-                    statusMessage.style.color = '#ef4444';
-                    return;
-                }
-
-                const newUserRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
-                await setDoc(newUserRef, {
-                    username,
-                    password,
-                    role: 'creator'
-                });
-                statusMessage.textContent = `Creator '${username}' created successfully!`;
-                statusMessage.style.color = '#22c55e';
-            } catch (error) {
-                console.error("Error creating creator:", error);
-                statusMessage.textContent = `Error creating creator: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        async function createAdmin() {
-            const username = document.getElementById('new-admin-username').value;
-            const password = document.getElementById('new-admin-password').value;
-            const statusMessage = document.getElementById('admin-creation-status');
-            statusMessage.textContent = '';
-
-            if (!username || !password) {
-                statusMessage.textContent = 'Please enter both username and password.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            try {
-                // Check if user already exists
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'users'), where('username', '==', username));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    statusMessage.textContent = 'Username already exists.';
-                    statusMessage.style.color = '#ef4444';
-                    return;
-                }
-
-                const newUserRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'users'));
-                await setDoc(newUserRef, {
-                    username,
-                    password,
-                    role: 'admin'
-                });
-                statusMessage.textContent = `Admin '${username}' created successfully!`;
-                statusMessage.style.color = '#22c55e';
-            } catch (error) {
-                console.error("Error creating admin:", error);
-                statusMessage.textContent = `Error creating admin: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        async function logout() {
-            if (userRole === 'admin') {
-                // For admins, just reset the UI
-                userRole = null;
-                document.getElementById('login-container').classList.remove('hidden');
-                document.getElementById('creator-panel').classList.add('hidden');
-                return;
-            }
-            try {
-                await auth.signOut();
-                userRole = null;
-                userDisplayName = 'N/A';
-                showPage('dashboard');
-            } catch (error) {
-                console.error("Error during logout:", error);
-            }
-        }
-
-        // ====================================================================
-        // MODAL HELPER FUNCTIONS
-        // ====================================================================
-
-        function showModal(modalId) {
-            const modal = document.getElementById(`modal-${modalId}`);
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(`modal-${modalId}`);
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        function showMessageModal(title, message) {
-            document.getElementById('message-modal-title').textContent = title;
-            document.getElementById('message-modal-content').textContent = message;
-            showModal('message');
-        }
-
-        // ====================================================================
-        // PAGE RENDERING FUNCTIONS
-        // ====================================================================
-
-        function renderDashboard() {
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'dashboard';
-            const activeMatches = matches.filter(m => !m.isSettled);
-            const activeBets = bets.filter(b => {
-                const match = matches.find(m => m.id === b.matchId);
-                return match && !match.isSettled;
-            });
-            const playerMap = players.reduce((acc, p) => {
-                acc[p.id] = p;
-                return acc;
-            }, {});
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="card bg-blue-600 text-white">
-                        <div class="text-lg font-semibold">Total Players</div>
-                        <div class="text-5xl font-bold mt-2">${players.length}</div>
-                    </div>
-                    <div class="card bg-green-600 text-white">
-                        <div class="text-lg font-semibold">Active Matches</div>
-                        <div class="text-5xl font-bold mt-2">${activeMatches.length}</div>
-                    </div>
-                    <div class="card bg-purple-600 text-white">
-                        <div class="text-lg font-semibold">Total Bets Placed</div>
-                        <div class="text-5xl font-bold mt-2">${activeBets.length}</div>
-                    </div>
-                </div>
-
-                <div class="mb-8">
-                    <h2 class="text-2xl font-semibold mb-4">Active Matches</h2>
-                    ${activeMatches.length > 0 ? `
-                        <div class="space-y-4">
-                            ${activeMatches.map(match => `
-                                <div class="card">
-                                    <h3 class="text-xl font-bold mb-2">${match.player1} vs ${match.player2}</h3>
-                                    <p class="text-sm text-gray-400">Match ID: ${match.id}</p>
-                                    <p>Odds: ${match.odds1} / ${match.odds2}</p>
-                                    <p class="mt-2">Start Date: ${new Date(match.startDate).toLocaleDateString()}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : '<p class="text-gray-400">No active matches found.</p>'}
-                </div>
-
-                <div>
-                    <h2 class="text-2xl font-semibold mb-4">Recent Bets</h2>
-                    ${activeBets.length > 0 ? `
-                        <div class="space-y-4">
-                            ${activeBets.slice(0, 5).reverse().map(bet => {
-                                const playerName = (playerMap[bet.bettorId] && playerMap[bet.bettorId].username) || 'Unknown Player';
-                                const match = matches.find(m => m.id === bet.matchId);
-                                const betOnPlayer = match ? (bet.betOnPlayer1 ? match.player1 : match.player2) : 'Unknown Player';
-                                return `
-                                    <div class="card">
-                                        <p><strong>${playerName}</strong> placed a bet of <strong>$${bet.amount}</strong> on <strong>${betOnPlayer}</strong></p>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    ` : '<p class="text-gray-400">No bets placed yet.</p>'}
-                </div>
-            `;
-        }
-
-        function renderNewMatchPage() {
-            if (userRole !== 'creator') {
-                document.getElementById('content-area').innerHTML = `
-                    <div class="text-center p-8">
-                        <h2 class="text-2xl font-bold text-red-500 mb-4">Access Denied</h2>
-                        <p class="text-gray-400">You must be a creator to access this page.</p>
-                    </div>
-                `;
-                return;
-            }
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'new-match';
-            const playerOptions = players.map(p => `<option value="${p.username}">${p.username}</option>`).join('');
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Create New Match</h1>
-                <div class="card p-6">
-                    <form id="new-match-form" class="space-y-4">
-                        <div>
-                            <label for="player1" class="block text-sm font-medium mb-1">Player 1</label>
-                            <select id="player1" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                                <option value="">Select Player 1</option>
-                                ${playerOptions}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="player2" class="block text-sm font-medium mb-1">Player 2</label>
-                            <select id="player2" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                                <option value="">Select Player 2</option>
-                                ${playerOptions}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="odds1" class="block text-sm font-medium mb-1">Odds for Player 1</label>
-                            <input type="number" id="odds1" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="e.g., 1.5">
-                        </div>
-                        <div>
-                            <label for="odds2" class="block text-sm font-medium mb-1">Odds for Player 2</label>
-                            <input type="number" id="odds2" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="e.g., 2.2">
-                        </div>
-                        <div>
-                            <label for="startDate" class="block text-sm font-medium mb-1">Start Date</label>
-                            <input type="date" id="startDate" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                        </div>
-                        <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 w-full">Create Match</button>
-                    </form>
-                    <p id="new-match-status" class="mt-4 text-sm text-center"></p>
-                </div>
-            `;
-
-            document.getElementById('new-match-form').addEventListener('submit', createNewMatch);
-        }
-
-        async function createNewMatch(event) {
-            event.preventDefault();
-            const player1Name = document.getElementById('player1').value;
-            const player2Name = document.getElementById('player2').value;
-            const odds1 = parseFloat(document.getElementById('odds1').value);
-            const odds2 = parseFloat(document.getElementById('odds2').value);
-            const startDate = document.getElementById('startDate').value;
-            const statusMessage = document.getElementById('new-match-status');
-
-            if (!player1Name || !player2Name || isNaN(odds1) || isNaN(odds2) || !startDate) {
-                statusMessage.textContent = 'Please fill out all fields correctly.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            if (player1Name === player2Name) {
-                statusMessage.textContent = 'Players must be different.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            try {
-                const matchRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'matches'));
-                await setDoc(matchRef, {
-                    player1: player1Name,
-                    player2: player2Name,
-                    odds1,
-                    odds2,
-                    startDate,
-                    isSettled: false,
-                    winner: null
-                });
-                statusMessage.textContent = `Match created successfully! ID: ${matchRef.id}`;
-                statusMessage.style.color = '#22c55e';
-            } catch (error) {
-                console.error("Error creating match:", error);
-                statusMessage.textContent = `Error creating match: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        function renderPlaceBetPage() {
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'place-bet';
-            const activeMatches = matches.filter(m => !m.isSettled);
-            const playerOptions = players.map(p => `<option value="${p.id}">${p.username}</option>`).join('');
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Place a Bet</h1>
-                <div class="card p-6">
-                    <form id="place-bet-form" class="space-y-4">
-                        <div>
-                            <label for="bettor" class="block text-sm font-medium mb-1">Select Bettor</label>
-                            <select id="bettor" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                                <option value="">Select a Player</option>
-                                ${playerOptions}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="match" class="block text-sm font-medium mb-1">Select Match</label>
-                            <select id="match" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                                <option value="">Select an Active Match</option>
-                                ${activeMatches.map(match => `<option value="${match.id}">${match.player1} vs ${match.player2}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="bet-on-player" class="block text-sm font-medium mb-1">Bet On</label>
-                            <select id="bet-on-player" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500">
-                                <option value="">Select a Player</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="amount" class="block text-sm font-medium mb-1">Bet Amount ($)</label>
-                            <input type="number" id="amount" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="e.g., 10">
-                        </div>
-                        <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 w-full">Place Bet</button>
-                    </form>
-                    <p id="place-bet-status" class="mt-4 text-sm text-center"></p>
-                </div>
-            `;
-
-            document.getElementById('match').addEventListener('change', (event) => {
-                const matchId = event.target.value;
-                const match = activeMatches.find(m => m.id === matchId);
-                const betOnSelect = document.getElementById('bet-on-player');
-                betOnSelect.innerHTML = '<option value="">Select a Player</option>';
-                if (match) {
-                    betOnSelect.innerHTML += `<option value="player1">${match.player1} (Odds: ${match.odds1})</option>`;
-                    betOnSelect.innerHTML += `<option value="player2">${match.player2} (Odds: ${match.odds2})</option>`;
-                }
-            });
-
-            document.getElementById('place-bet-form').addEventListener('submit', placeBet);
-        }
-
-        async function placeBet(event) {
-            event.preventDefault();
-            const bettorId = document.getElementById('bettor').value;
-            const matchId = document.getElementById('match').value;
-            const betOn = document.getElementById('bet-on-player').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const statusMessage = document.getElementById('place-bet-status');
-
-            if (!bettorId || !matchId || !betOn || isNaN(amount) || amount <= 0) {
-                statusMessage.textContent = 'Please fill out all fields correctly.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            const bettor = players.find(p => p.id === bettorId);
-            if (!bettor || bettor.balance < amount) {
-                statusMessage.textContent = 'Insufficient balance.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            try {
-                // Deduct bet amount from bettor's balance
-                const bettorDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', bettorId);
-                await updateDoc(bettorDocRef, {
-                    balance: bettor.balance - amount
-                });
-
-                // Add the new bet document
-                const betRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'bets'));
-                await setDoc(betRef, {
-                    bettorId: bettorId,
-                    matchId,
-                    betOnPlayer1: betOn === 'player1',
-                    amount,
-                    timestamp: Date.now()
-                });
-
-                statusMessage.textContent = `Bet placed successfully!`;
-                statusMessage.style.color = '#22c55e';
-            } catch (error) {
-                console.error("Error placing bet:", error);
-                statusMessage.textContent = `Error placing bet: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        function renderSettleMatchPage() {
-            if (userRole !== 'creator') {
-                document.getElementById('content-area').innerHTML = `
-                    <div class="text-center p-8">
-                        <h2 class="text-2xl font-bold text-red-500 mb-4">Access Denied</h2>
-                        <p class="text-gray-400">You must be a creator to access this page.</p>
-                    </div>
-                `;
-                return;
-            }
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'settle-match';
-            const activeMatches = matches.filter(m => !m.isSettled);
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Settle a Match</h1>
-                <div id="match-list" class="space-y-4">
-                    ${activeMatches.length > 0 ? `
-                        ${activeMatches.map(match => `
-                            <div class="card flex flex-col md:flex-row justify-between items-start md:items-center">
-                                <div>
-                                    <h3 class="text-xl font-bold">${match.player1} vs ${match.player2}</h3>
-                                    <p class="text-sm text-gray-400">ID: ${match.id}</p>
-                                    <p>Odds: ${match.odds1} / ${match.odds2}</p>
-                                </div>
-                                <div class="mt-4 md:mt-0 flex gap-2">
-                                    <button onclick="settleMatch('${match.id}', '${match.player1}')" class="btn bg-green-600 text-white hover:bg-green-700">Winner: ${match.player1}</button>
-                                    <button onclick="settleMatch('${match.id}', '${match.player2}')" class="btn bg-green-600 text-white hover:bg-green-700">Winner: ${match.player2}</button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    ` : '<p class="text-gray-400">No active matches to settle.</p>'}
-                </div>
-                <p id="settle-match-status" class="mt-4 text-sm text-center"></p>
-            `;
-        }
-
-        async function settleMatch(matchId, winnerName) {
-            const statusMessage = document.getElementById('settle-match-status');
-            statusMessage.textContent = 'Settling match...';
-            statusMessage.style.color = '#fff';
-
-            try {
-                const match = matches.find(m => m.id === matchId);
-                if (!match) {
-                    throw new Error("Match not found.");
-                }
-
-                // Get all bets for this match
-                const matchBets = bets.filter(b => b.matchId === matchId);
-
-                // Update player balances based on bet outcomes
-                for (const bet of matchBets) {
-                    const bettor = players.find(p => p.id === bet.bettorId);
-                    if (!bettor) continue;
-
-                    let payout = 0;
-                    const betOnWinner = (bet.betOnPlayer1 && match.player1 === winnerName) || (!bet.betOnPlayer1 && match.player2 === winnerName);
-
-                    if (betOnWinner) {
-                        const winningOdds = bet.betOnPlayer1 ? match.odds1 : match.odds2;
-                        payout = bet.amount * winningOdds;
-                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'players', bettor.id), {
-                            balance: bettor.balance + payout
-                        });
-                    }
-                }
-
-                // Move the match to the record book and remove from active matches
-                const matchDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'matches', matchId);
-                const recordBookRef = doc(db, 'artifacts', appId, 'public', 'data', 'recordBook', matchId);
-
-                await setDoc(recordBookRef, {
-                    ...match,
-                    winner: winnerName,
-                    isSettled: true,
-                    settledDate: Date.now()
-                });
-                await updateDoc(matchDocRef, {
-                    winner: winnerName,
-                    isSettled: true,
-                    settledDate: Date.now()
-                });
-
-                statusMessage.textContent = `Match settled successfully! Winner: ${winnerName}`;
-                statusMessage.style.color = '#22c55e';
-
-            } catch (error) {
-                console.error("Error settling match:", error);
-                statusMessage.textContent = `Error settling match: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        function renderPlayerBalances() {
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'player-balances';
-            const sortedPlayers = [...players].sort((a, b) => b.balance - a.balance);
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Player Balances</h1>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-[#2a2a2a] rounded-lg">
-                        <thead>
-                            <tr class="bg-gray-700">
-                                <th class="py-3 px-4 text-left">Player</th>
-                                <th class="py-3 px-4 text-left">Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${sortedPlayers.map(player => `
-                                <tr class="border-b border-gray-600 last:border-b-0">
-                                    <td class="py-3 px-4">${player.username}</td>
-                                    <td class="py-3 px-4">$${player.balance.toFixed(2)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function renderAddPlayerPage() {
-            if (userRole !== 'admin') {
-                document.getElementById('content-area').innerHTML = `
-                    <div class="text-center p-8">
-                        <h2 class="text-2xl font-bold text-red-500 mb-4">Access Denied</h2>
-                        <p class="text-gray-400">You must be an admin to access this page.</p>
-                    </div>
-                `;
-                return;
-            }
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'add-player';
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Add New Player</h1>
-                <div class="card p-6">
-                    <form id="add-player-form" class="space-y-4">
-                        <div>
-                            <label for="new-player-name" class="block text-sm font-medium mb-1">Player Name</label>
-                            <input type="text" id="new-player-name" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500" placeholder="e.g., John Doe">
-                        </div>
-                        <div>
-                            <label for="initial-balance" class="block text-sm font-medium mb-1">Initial Balance ($)</label>
-                            <input type="number" id="initial-balance" class="w-full p-3 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:border-blue-500" value="100">
-                        </div>
-                        <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 w-full">Add Player</button>
-                    </form>
-                    <p id="add-player-status" class="mt-4 text-sm text-center"></p>
-                </div>
-            `;
-            document.getElementById('add-player-form').addEventListener('submit', addNewPlayer);
-        }
-
-        async function addNewPlayer(event) {
-            event.preventDefault();
-            const playerName = document.getElementById('new-player-name').value;
-            const initialBalance = parseFloat(document.getElementById('initial-balance').value);
-            const statusMessage = document.getElementById('add-player-status');
-
-            if (!playerName || isNaN(initialBalance) || initialBalance < 0) {
-                statusMessage.textContent = 'Please provide a valid name and balance.';
-                statusMessage.style.color = '#ef4444';
-                return;
-            }
-
-            try {
-                // Check if player with same username exists
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'players'), where('username', '==', playerName));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    statusMessage.textContent = 'Player with this name already exists.';
-                    statusMessage.style.color = '#ef4444';
-                    return;
-                }
-
-                // Add the new player document
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'players'), {
-                    username: playerName,
-                    balance: initialBalance
-                });
-
-                statusMessage.textContent = `Player '${playerName}' added successfully!`;
-                statusMessage.style.color = '#22c55e';
-            } catch (error) {
-                console.error("Error adding player:", error);
-                statusMessage.textContent = `Error adding player: ${error.message}`;
-                statusMessage.style.color = '#ef4444';
-            }
-        }
-
-        function renderRecordBook() {
-            const contentArea = document.getElementById('content-area');
-            contentArea.dataset.page = 'record-book';
-            const sortedRecords = [...recordBook].sort((a, b) => b.settledDate - a.settledDate);
-
-            contentArea.innerHTML = `
-                <h1 class="text-3xl font-bold mb-8">Record Book (Completed Matches)</h1>
-                <div class="space-y-4">
-                    ${sortedRecords.length > 0 ? `
-                        ${sortedRecords.map(record => `
-                            <div class="card">
-                                <h3 class="text-xl font-bold">${record.player1} vs ${record.player2}</h3>
-                                <p class="text-gray-400 text-sm">Completed: ${new Date(record.settledDate).toLocaleDateString()}</p>
-                                <p class="text-lg mt-2"><strong>Winner: ${record.winner}</strong></p>
-                                <p>Odds: ${record.odds1} / ${record.odds2}</p>
-                            </div>
-                        `).join('')}
-                    ` : '<p class="text-gray-400">No matches have been settled yet.</p>'}
-                </div>
-            `;
-        }
-
-        // ====================================================================
-        // GEMINI API INTEGRATION
-        // ====================================================================
-
-        async function getGeminiPrediction(prompt) {
-            const statusMessage = document.getElementById('place-bet-status');
-            statusMessage.textContent = 'Thinking...';
-            statusMessage.style.color = '#fff';
-
-            let retries = 0;
-            const maxRetries = 5;
-            const baseDelay = 1000; // 1 second
-
-            while (retries < maxRetries) {
-                try {
-                    const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                    const payload = { contents: chatHistory };
-                    const apiKey = ""; // Canvas will provide this at runtime
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API call failed with status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        return text;
-                    } else {
-                        throw new Error("Invalid API response structure.");
-                    }
-                } catch (error) {
-                    console.error("Error calling Gemini API:", error);
-                    retries++;
-                    if (retries < maxRetries) {
-                        const delay = baseDelay * Math.pow(2, retries);
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    } else {
-                        statusMessage.textContent = 'Failed to get a prediction. Please try again.';
-                        statusMessage.style.color = '#ef4444';
-                        return null;
-                    }
-                }
-            }
-        }
-    </script>
+        closeSlip();
+        render();
+    }
+
+    function doCashout(marketType) {
+        // Simple visual simulation of cashout
+        // Flattens the green book
+        let total = (pnl.A + pnl.B) / 2; // Rough avg
+        if(total < 0) total = 0; 
+        
+        balance += total;
+        pnl.A = 0;
+        pnl.B = 0;
+        alert("Cashed out: " + total.toFixed(0));
+        render();
+    }
+
+    // Start
+    init();
+
+</script>
 </body>
 </html>
