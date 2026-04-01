@@ -1,614 +1,678 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Cricket Exchange</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --header-white: #d32f2f; /* Darker red from screenshot */
-            --bg-gray: #f2f4f7;
-            --back-blue: #72bbef;
-            --lay-pink: #faa9ba;
-            --back-blue-light: #e6f5ff;
-            --lay-pink-light: #fff0f5;
-            --text-dark: #333;
-            --green: #008000;
-            --red: #d0021b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil247 – Match Poster Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
 
-        body {
-            font-family: 'Roboto Condensed', sans-serif;
-            background-color: var(--bg-gray);
-            margin: 0;
-            padding-bottom: 100px;
-        }
+body {
+  background: #07070f;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  gap: 20px;
+}
 
-        /* --- HEADER --- */
-        .app-header {
-            background: #2d2d2d;
-            color: white;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-        }
-        .balance-badge {
-            background: #444;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
+h1 {
+  color: #f0c040;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 4px;
+  text-align: center;
+}
 
-        /* --- ADMIN PANEL --- */
-        .admin-panel {
-            background: white;
-            margin: 10px;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        .admin-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
-        .admin-col { flex: 1; }
-        .admin-label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }
-        .admin-input { 
-            width: 100%; padding: 8px; border: 1px solid #ccc; 
-            border-radius: 4px; box-sizing: border-box; font-family: inherit; 
-        }
-        h3 { margin: 0 0 10px 0; font-size: 14px; color: #555; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+#status {
+  color: #22c55e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  min-height: 18px;
+  text-align: center;
+}
 
-        /* --- MARKET CARD STYLES (EXACT UI) --- */
-        .market-card {
-            background: white;
-            margin: 10px 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .market-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            border-bottom: 1px solid #eee;
-        }
+.controls {
+  width: 100%;
+  max-width: 960px;
+  background: #10101c;
+  border: 1px solid #252540;
+  border-radius: 18px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
 
-        /* The Red Tag Shape */
-        .market-title-tag {
-            background-color: var(--header-red);
-            color: white;
-            padding: 5px 15px 5px 10px;
-            font-weight: 700;
-            font-size: 16px;
-            position: relative;
-            clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
-            display: flex;
-            align-items: center;
-            min-width: 120px;
-        }
+.ctrl-group { display:flex; flex-direction:column; gap:7px; }
+.ctrl-group.full { grid-column: 1 / -1; }
 
-        .cashout-pill {
-            background: #bd202d;
-            border: 1px solid white;
-            border-radius: 3px;
-            padding: 1px 5px;
-            font-size: 10px;
-            margin-left: 10px;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-        }
+label {
+  color: #777;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+}
 
-        .market-info {
-            font-size: 11px;
-            color: #666;
-            padding-right: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .info-icon {
-            background: #bd202d;
-            color: white;
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 14px;
-            font-weight: bold;
-        }
+input[type="text"] {
+  background: #1a1a2e;
+  border: 1px solid #2a2a45;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+input[type="text"]:focus { outline: none; border-color: #f0c040; }
 
-        /* Sub Headers (Back/Lay) */
-        .sub-header {
-            display: flex;
-            padding: 5px 10px;
-            background: #f9f9f9;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .empty-col { flex: 1; } /* Space for team name */
-        .odds-header { 
-            width: 110px; /* Width of two buttons */
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: #555;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 5px;
-        }
+/* Upload zones */
+.upload-zone {
+  background: #1a1a2e;
+  border: 2px dashed #2a2a55;
+  border-radius: 10px;
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+}
+.upload-zone:hover { border-color: #f0c040; background: #1e1e38; }
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0; cursor: pointer; z-index: 2;
+}
+.upload-zone .zi { font-size: 1.8rem; }
+.upload-zone .zt { color: #aaa; font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; }
+.zone-thumb {
+  width: 100%; max-height: 80px;
+  object-fit: cover; border-radius: 6px;
+  display: none;
+}
+.zone-ok { color: #22c55e; font-size: 0.72rem; font-weight: 800; display: none; }
 
-        /* Runner Row */
-        .runner-row {
-            display: flex;
-            border-bottom: 1px solid #f0f0f0;
-            min-height: 60px;
-        }
-        .runner-info {
-            flex: 1;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .runner-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-        .pnl {
-            font-size: 12px;
-            margin-top: 2px;
-            font-weight: 700;
-        }
-        .green { color: var(--green); }
-        .red { color: var(--red); }
+/* Background upload zone */
+.bg-zone {
+  background: #1a1a2e;
+  border: 2px dashed #f0c040;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.bg-zone input[type="file"] {
+  position: absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; z-index:2;
+}
+.bg-zone .zt { color:#f0c040; font-size:0.72rem; font-weight:800; letter-spacing:1px; }
 
-        .odds-container {
-            display: flex;
-        }
-        .odds-box {
-            width: 55px;
-            height: 100%;
-            border: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            margin-left: 1px;
-        }
-        .back-box { background-color: var(--back-blue); }
-        .lay-box { background-color: var(--lay-pink); }
-        
-        .price { font-size: 18px; font-weight: 700; color: #1e1e1e; }
-        .vol { font-size: 11px; color: #333; opacity: 0.8; }
+/* IPL chips */
+.ipl-section { grid-column: 1 / -1; }
+.ipl-title { color:#777; font-size:0.65rem; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; margin-bottom:10px; }
+.ipl-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+@media(max-width:560px){ .ipl-grid { grid-template-columns: repeat(4,1fr); } }
 
-        /* Footer Note */
-        .market-footer {
-            background: #f5f5f5;
-            color: #888;
-            font-size: 11px;
-            padding: 8px 10px;
-            text-transform: uppercase;
-        }
+.team-chip {
+  border: 2px solid #222;
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.team-chip:hover { transform: scale(1.07); }
+.team-chip.selected { border-color: #f0c040 !important; box-shadow: 0 0 14px rgba(240,192,64,0.5); transform: scale(1.09); }
+.chip-dot { width: 20px; height: 20px; border-radius: 50%; }
+.chip-name { font-size: 0.58rem; font-weight: 900; letter-spacing: 0.5px; }
+.chip-label { font-size: 0.5rem; color: #666; }
 
-        /* --- BETSLIP POPUP --- */
-        .betslip-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); display: none; z-index: 99;
-        }
-        .betslip {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: white; padding: 20px;
-            border-radius: 15px 15px 0 0;
-            z-index: 100;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-        .betslip.active { transform: translateY(0); }
-        
-        .slip-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 18px; font-weight: bold; }
-        .place-btn {
-            width: 100%; padding: 15px; border: none; border-radius: 5px;
-            font-size: 16px; font-weight: bold; color: white; cursor: pointer;
-        }
-        .stake-input { padding: 10px; width: 100%; font-size: 16px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}
-    </style>
+/* Smoke color pickers */
+.smoke-row { display:flex; align-items:center; gap:10px; }
+input[type="color"] {
+  width: 44px; height: 38px;
+  border: none; border-radius: 8px;
+  cursor: pointer; background: none; padding: 2px;
+}
+.smoke-hex { color: #bbb; font-size: 0.78rem; font-weight: 700; font-family: monospace; }
+
+/* Buttons */
+.btn-row { display:flex; gap:12px; grid-column: 1 / -1; }
+.btn {
+  flex: 1; border: none; border-radius: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; letter-spacing: 2px;
+  padding: 15px 8px; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-gold { background: linear-gradient(135deg,#f0c040,#c8860a); color: #000; }
+.btn-green { background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; }
+.btn:hover { opacity: 0.82; }
+
+/* Canvas */
+.poster-wrap {
+  width: min(600px, 96vw);
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(240,192,64,0.18);
+  flex-shrink: 0;
+}
+canvas { width:100%; height:100%; display:block; }
+
+.note { color:#333; font-size:0.7rem; text-align:center; }
+</style>
 </head>
 <body>
 
-<div class="app-header">
-    <div><b>CRICKET</b>EXCH</div>
-    <div class="balance-badge">PTS: <span id="main-balance">100000</span></div>
+<h1>🏏 TAMIL247 — POSTER MAKER</h1>
+<div id="status">Loading background image...</div>
+
+<div class="controls">
+
+  <!-- BG UPLOAD -->
+  <div class="ctrl-group full">
+    <label>🖼 Background Image (Default: Tamil247 Stadium)</label>
+    <div class="bg-zone" id="bgZone">
+      <input type="file" id="bgFile" accept="image/*">
+      <span style="font-size:1.5rem">🏟</span>
+      <div class="zt">TAP TO CHANGE BACKGROUND</div>
+      <div id="bgStatus" style="color:#22c55e;font-size:0.7rem;font-weight:800;display:none">✅ CUSTOM BG LOADED</div>
+    </div>
+  </div>
+
+  <!-- LEFT PLAYER -->
+  <div class="ctrl-group">
+    <label>⬅ Left Player Photo</label>
+    <div class="upload-zone" id="zone1">
+      <input type="file" id="img1" accept="image/*">
+      <span class="zi">📸</span>
+      <div class="zt">TAP TO UPLOAD</div>
+      <img class="zone-thumb" id="prev1">
+      <div class="zone-ok" id="ok1">✅ LOADED</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PLAYER -->
+  <div class="ctrl-group">
+    <label>➡ Right Player Photo</label>
+    <div class="upload-zone" id="zone2">
+      <input type="file" id="img2" accept="image/*">
+      <span class="zi">📸</span>
+      <div class="zt">TAP TO UPLOAD</div>
+      <img class="zone-thumb" id="prev2">
+      <div class="zone-ok" id="ok2">✅ LOADED</div>
+    </div>
+  </div>
+
+  <!-- TEAM NAMES -->
+  <div class="ctrl-group">
+    <label>Team 1 (Left)</label>
+    <input type="text" id="team1" value="GT" maxlength="6">
+  </div>
+  <div class="ctrl-group">
+    <label>Team 2 (Right)</label>
+    <input type="text" id="team2" value="PBKS" maxlength="6">
+  </div>
+
+  <!-- MATCH TEXT -->
+  <div class="ctrl-group">
+    <label>Match Subtitle</label>
+    <input type="text" id="matchSub" value="Aaj Ka Big Match">
+  </div>
+
+  <!-- OFFERS -->
+  <div class="ctrl-group">
+    <label>Offer Line 1</label>
+    <input type="text" id="offer1" value="WELCOME BONUS AVAILABLE">
+  </div>
+  <div class="ctrl-group">
+    <label>Offer Line 2 (optional)</label>
+    <input type="text" id="offer2" value="">
+  </div>
+
+  <!-- WHATSAPP + WEBSITE -->
+  <div class="ctrl-group">
+    <label>WhatsApp</label>
+    <input type="text" id="wa" value="73587 72575">
+  </div>
+  <div class="ctrl-group">
+    <label>Website</label>
+    <input type="text" id="site" value="tamil247.vip">
+  </div>
+
+  <!-- IPL SMOKE PRESETS -->
+  <div class="ipl-section">
+    <div class="ipl-title">🎨 IPL Team Smoke — Click to Apply Colors</div>
+    <div class="ipl-grid" id="iplGrid"></div>
+  </div>
+
+  <!-- CUSTOM SMOKE -->
+  <div class="ctrl-group">
+    <label>Left Smoke Color</label>
+    <div class="smoke-row">
+      <input type="color" id="s1" value="#1a5fbf">
+      <span class="smoke-hex" id="s1hex">#1a5fbf</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <label>Right Smoke Color</label>
+    <div class="smoke-row">
+      <input type="color" id="s2" value="#cc2200">
+      <span class="smoke-hex" id="s2hex">#cc2200</span>
+    </div>
+  </div>
+
+  <!-- SMOKE INTENSITY -->
+  <div class="ctrl-group">
+    <label>Smoke Intensity</label>
+    <input type="range" id="smokeIntensity" min="0" max="100" value="55" style="width:100%;accent-color:#f0c040;">
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn btn-gold" onclick="renderPoster()">🎨 GENERATE</button>
+    <button class="btn btn-green" onclick="downloadPoster()">⬇ DOWNLOAD PNG</button>
+  </div>
+
 </div>
 
-<div class="admin-panel">
-    <h3>⚙️ Operator Panel</h3>
-    
-    <div class="admin-row">
-        <div class="admin-col">
-            <label class="admin-label">Team A</label>
-            <input type="text" id="teamA_name" class="admin-input" value="Janakpur Bolts">
-        </div>
-        <div class="admin-col">
-            <label class="admin-label">Team B</label>
-            <input type="text" id="teamB_name" class="admin-input" value="Chitwan Rhinos">
-        </div>
-    </div>
-
-    <div class="admin-row">
-        <div class="admin-col">
-            <label class="admin-label">Market Title (Editable)</label>
-            <input type="text" id="market_title_1" class="admin-input" value="MATCH ODDS">
-        </div>
-        <div class="admin-col">
-            <label class="admin-label">Team A Back (Decimal)</label>
-            <input type="number" id="mo_input" class="admin-input" value="1.90" step="0.01" oninput="calcMatchOdds()">
-        </div>
-    </div>
-
-    <div class="admin-row">
-        <div class="admin-col">
-            <label class="admin-label">Bookmaker Title</label>
-            <input type="text" id="market_title_2" class="admin-input" value="BOOKMAKER">
-        </div>
-        <div class="admin-col">
-            <label class="admin-label">Team A Back (Integer)</label>
-            <input type="number" id="bm_input" class="admin-input" value="65" oninput="calcBookmaker()">
-        </div>
-        <div class="admin-col" style="flex:0.5">
-            <button onclick="updateAll()" style="height:35px; background:#333; color:white; border:none; border-radius:4px; width:100%;">Set</button>
-        </div>
-    </div>
+<div class="poster-wrap">
+  <canvas id="poster" width="1080" height="1080"></canvas>
 </div>
 
-<div class="market-card">
-    <div class="market-header">
-        <div class="market-title-tag">
-            <span id="disp_title_1">MATCH ODDS</span>
-            <div class="cashout-pill" onclick="doCashout('MO')">CASHOUT</div>
-        </div>
-        <div class="market-info">
-            Min: 100 | Max: 10k <div class="info-icon">i</div>
-        </div>
-    </div>
-
-    <div class="sub-header">
-        <div class="empty-col"></div>
-        <div class="odds-header">
-            <span>BACK</span> <span>LAY</span>
-        </div>
-    </div>
-
-    <div class="runner-row">
-        <div class="runner-info">
-            <div class="runner-name" id="disp_teamA_1">Team A</div>
-            <div class="pnl" id="pnl_A_1">0.00</div>
-        </div>
-        <div class="odds-container">
-            <button class="odds-box back-box" onclick="openSlip('A', 'back', 'MO')">
-                <span class="price" id="mo_back_A">1.90</span>
-                <span class="vol">546k</span>
-            </button>
-            <button class="odds-box lay-box" onclick="openSlip('A', 'lay', 'MO')">
-                <span class="price" id="mo_lay_A">1.92</span>
-                <span class="vol">12k</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="runner-row">
-        <div class="runner-info">
-            <div class="runner-name" id="disp_teamB_1">Team B</div>
-            <div class="pnl" id="pnl_B_1">0.00</div>
-        </div>
-        <div class="odds-container">
-            <button class="odds-box back-box" onclick="openSlip('B', 'back', 'MO')">
-                <span class="price" id="mo_back_B">2.08</span>
-                <span class="vol">800k</span>
-            </button>
-            <button class="odds-box lay-box" onclick="openSlip('B', 'lay', 'MO')">
-                <span class="price" id="mo_lay_B">2.12</span>
-                <span class="vol">489k</span>
-            </button>
-        </div>
-    </div>
-    <div class="market-footer">Allowed In Our Exchange</div>
-</div>
-
-<div class="market-card">
-    <div class="market-header">
-        <div class="market-title-tag">
-            <span id="disp_title_2">BOOKMAKER</span>
-            <div class="cashout-pill">CASHOUT</div>
-        </div>
-        <div class="market-info">
-            Min: 100 | Max: 50k <div class="info-icon">i</div>
-        </div>
-    </div>
-
-    <div class="sub-header">
-        <div class="empty-col"></div>
-        <div class="odds-header">
-            <span>BACK</span> <span>LAY</span>
-        </div>
-    </div>
-
-    <div class="runner-row">
-        <div class="runner-info">
-            <div class="runner-name" id="disp_teamA_2">Team A</div>
-            <div class="pnl" id="pnl_A_2">0.00</div>
-        </div>
-        <div class="odds-container">
-            <button class="odds-box back-box" onclick="openSlip('A', 'back', 'BM')">
-                <span class="price" id="bm_back_A">65</span>
-                <span class="vol">25k</span>
-            </button>
-            <button class="odds-box lay-box" onclick="openSlip('A', 'lay', 'BM')">
-                <span class="price" id="bm_lay_A">70</span>
-                <span class="vol">25k</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="runner-row">
-        <div class="runner-info">
-            <div class="runner-name" id="disp_teamB_2">Team B</div>
-            <div class="pnl" id="pnl_B_2">0.00</div>
-        </div>
-        <div class="odds-container">
-            <button class="odds-box back-box" onclick="openSlip('B', 'back', 'BM')">
-                <span class="price" id="bm_back_B">132</span>
-                <span class="vol">25k</span>
-            </button>
-            <button class="odds-box lay-box" onclick="openSlip('B', 'lay', 'BM')">
-                <span class="price" id="bm_lay_B">154</span>
-                <span class="vol">25k</span>
-            </button>
-        </div>
-    </div>
-    <div class="market-footer">Advance Match Bets Started 🏏</div>
-</div>
-
-<div class="betslip-overlay" id="overlay" onclick="closeSlip()"></div>
-<div class="betslip" id="betslip">
-    <div class="slip-header">
-        <span id="slip-title">Place Bet</span>
-        <span style="color:red; cursor:pointer;" onclick="closeSlip()">✕</span>
-    </div>
-    
-    <div style="margin-bottom:10px; display:flex; justify-content:space-between;">
-        <span>Odds: <b id="slip-odds">0</b></span>
-        <span id="slip-info"></span>
-    </div>
-
-    <input type="number" id="stake" class="stake-input" placeholder="Stake Amount">
-    
-    <div style="display:flex; gap:5px; margin-bottom:15px;">
-        <button onclick="addStake(1000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+1k</button>
-        <button onclick="addStake(5000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+5k</button>
-        <button onclick="addStake(25000)" style="flex:1; padding:8px; background:#eee; border:1px solid #ddd;">+25k</button>
-    </div>
-
-    <button id="placeBtn" class="place-btn" onclick="confirmBet()">PLACE BET</button>
-</div>
+<p class="note">Use PNG with transparent background for players — looks best!</p>
 
 <script>
-    // --- STATE ---
-    let balance = 100000;
-    
-    let state = {
-        teamA: "Janakpur Bolts",
-        teamB: "Chitwan Rhinos",
-        mo_odds: { A_back: 1.90, A_lay: 1.92, B_back: 2.08, B_lay: 2.12 },
-        bm_odds: { A_back: 65, A_lay: 70, B_back: 132, B_lay: 154 }
+const W = 1080, H = 1080;
+let bgImg = null, p1 = null, p2 = null;
+
+// ── IPL TEAMS ──
+const TEAMS = [
+  { abbr:'CSK', name:'Chennai',   c1:'#f5c518', c2:'#003366', bg:'#0a0900' },
+  { abbr:'MI',  name:'Mumbai',    c1:'#005da0', c2:'#00bfff', bg:'#000c18' },
+  { abbr:'RCB', name:'Bangalore', c1:'#cc0000', c2:'#d4a017', bg:'#110000' },
+  { abbr:'KKR', name:'Kolkata',   c1:'#5a0096', c2:'#d4a017', bg:'#080010' },
+  { abbr:'DC',  name:'Delhi',     c1:'#004c97', c2:'#ef1c25', bg:'#000816' },
+  { abbr:'PBKS',name:'Punjab',    c1:'#c8102e', c2:'#8c8c8c', bg:'#120000' },
+  { abbr:'RR',  name:'Rajasthan', c1:'#ea1a85', c2:'#254aa5', bg:'#110010' },
+  { abbr:'SRH', name:'Hyderabad', c1:'#f26522', c2:'#d4a017', bg:'#100800' },
+  { abbr:'GT',  name:'Gujarat',   c1:'#1c3f6e', c2:'#d4a017', bg:'#04060e' },
+  { abbr:'LSG', name:'Lucknow',   c1:'#0057e7', c2:'#00d2ff', bg:'#00060f' },
+];
+
+// Build chips
+const grid = document.getElementById('iplGrid');
+TEAMS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'team-chip';
+  chip.style.background = t.bg;
+  chip.innerHTML = `
+    <div class="chip-dot" style="background:linear-gradient(135deg,${t.c1},${t.c2})"></div>
+    <div class="chip-name" style="color:${t.c1}">${t.abbr}</div>
+    <div class="chip-label" style="color:${t.c2}">${t.name}</div>
+  `;
+  chip.onclick = () => {
+    grid.querySelectorAll('.selected').forEach(c=>c.classList.remove('selected'));
+    chip.classList.add('selected');
+    setColor('s1', t.c1);
+    setColor('s2', t.c2);
+    renderPoster();
+  };
+  grid.appendChild(chip);
+});
+
+function setColor(id, val) {
+  document.getElementById(id).value = val;
+  document.getElementById(id+'hex').textContent = val;
+}
+
+// Smoke color pickers
+['s1','s2'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    document.getElementById(id+'hex').textContent = e.target.value;
+    grid.querySelectorAll('.selected').forEach(c=>c.classList.remove('selected'));
+    renderPoster();
+  });
+});
+document.getElementById('smokeIntensity').addEventListener('input', renderPoster);
+
+// ── PHOTO LOADER ──
+function loadPhoto(fileInput, slot, prevId, okId) {
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if(!file) return;
+    status('Loading...');
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        if(slot===1) p1=img; else p2=img;
+        const prev = document.getElementById(prevId);
+        prev.src = e.target.result;
+        prev.style.display = 'block';
+        document.getElementById(okId).style.display = 'block';
+        status('Photo loaded!');
+        renderPoster();
+      };
+      img.src = e.target.result;
     };
+    reader.readAsDataURL(file);
+  });
+}
+loadPhoto(document.getElementById('img1'), 1, 'prev1', 'ok1');
+loadPhoto(document.getElementById('img2'), 2, 'prev2', 'ok2');
 
-    // Tracks Profit/Loss per team
-    let pnl = { A: 0, B: 0 };
+// BG custom upload
+document.getElementById('bgFile').addEventListener('change', function() {
+  const file = this.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => { bgImg=img; document.getElementById('bgStatus').style.display='block'; status('BG loaded!'); renderPoster(); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
-    let selection = null; // { team: 'A', type: 'back', market: 'MO', odds: 1.9 }
+// ── LOAD DEFAULT BG (the uploaded Tamil247 image) ──
+function loadDefaultBg() {
+  // Try to load from the uploaded file path via data URI workaround
+  // We'll draw it as base64 embedded — user can also upload custom BG
+  status('Load your stadium background via the BG zone above, or upload custom');
 
-    // --- LOGIC ---
-    function init() {
-        calcMatchOdds();
-        calcBookmaker();
-        render();
+  // Attempt to load from same-origin if hosted, else prompt
+  // Since this runs locally, we use a fetch approach
+  fetch('/mnt/user-data/uploads/1000011495.png')
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => { bgImg=img; status('Stadium loaded!'); renderPoster(); };
+      img.src = url;
+    })
+    .catch(() => {
+      status('Upload your stadium BG using the zone above');
+      renderPoster();
+    });
+}
+
+// ── HEX → RGB ──
+function hr(hex) {
+  const h = hex.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+
+// ── RENDER ──
+function renderPoster() {
+  const canvas = document.getElementById('poster');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  // 1. BACKGROUND
+  if(bgImg) {
+    const ar = bgImg.width/bgImg.height;
+    let dw,dh,dx,dy;
+    if(ar>1){ dh=H; dw=H*ar; dx=(W-dw)/2; dy=0; }
+    else    { dw=W; dh=W/ar; dx=0; dy=(H-dh)/2; }
+    ctx.drawImage(bgImg,dx,dy,dw,dh);
+  } else {
+    // fallback dark bg
+    const bg = ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'#03030e'); bg.addColorStop(0.5,'#080818'); bg.addColorStop(1,'#03030e');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    // draw placeholder message
+    ctx.fillStyle='rgba(255,255,255,0.08)';
+    ctx.font='bold 28px Montserrat';
+    ctx.textAlign='center';
+    ctx.fillText('Upload Stadium BG Above',W/2,H*0.5);
+  }
+
+  // slight darken top+bottom to keep text readable
+  const topDark = ctx.createLinearGradient(0,0,0,H*0.45);
+  topDark.addColorStop(0,'rgba(0,0,8,0.72)');
+  topDark.addColorStop(1,'rgba(0,0,8,0)');
+  ctx.fillStyle=topDark; ctx.fillRect(0,0,W,H);
+
+  const botDark = ctx.createLinearGradient(0,H*0.72,0,H);
+  botDark.addColorStop(0,'rgba(0,0,8,0)');
+  botDark.addColorStop(1,'rgba(0,0,8,0.88)');
+  ctx.fillStyle=botDark; ctx.fillRect(0,0,W,H);
+
+  // 2. SMOKE OVERLAYS
+  const intensity = document.getElementById('smokeIntensity').value / 100;
+  const [r1,g1,b1] = hr(document.getElementById('s1').value);
+  const [r2,g2,b2] = hr(document.getElementById('s2').value);
+
+  function smoke(cx,cy,r,g,b,spread,alpha) {
+    const sg = ctx.createRadialGradient(cx,cy,0,cx,cy,spread);
+    sg.addColorStop(0,`rgba(${r},${g},${b},${alpha})`);
+    sg.addColorStop(0.35,`rgba(${r},${g},${b},${alpha*0.55})`);
+    sg.addColorStop(0.65,`rgba(${r},${g},${b},${alpha*0.18})`);
+    sg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+  }
+
+  smoke(W*0.04, H*0.72, r1,g1,b1, W*0.72, intensity*0.90);
+  smoke(W*0.96, H*0.72, r2,g2,b2, W*0.72, intensity*0.90);
+
+  // Tendrils
+  function tendrils(cx,cy,r,g,b,dir,alpha) {
+    ctx.save();
+    for(let i=0;i<9;i++){
+      const angle = (dir>0?0.08:0.92)*Math.PI + (Math.random()-0.5)*0.9;
+      const len = 180+Math.random()*280;
+      const x2=cx+Math.cos(angle)*len, y2=cy-len*0.5;
+      const cpx=cx+(x2-cx)*0.3+dir*70, cpy=cy-120;
+      const tg=ctx.createLinearGradient(cx,cy,x2,y2);
+      tg.addColorStop(0,`rgba(${r},${g},${b},${alpha*0.55})`);
+      tg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.quadraticCurveTo(cpx,cpy,x2,y2);
+      ctx.strokeStyle=tg; ctx.lineWidth=24+Math.random()*55; ctx.lineCap='round'; ctx.stroke();
     }
+    ctx.restore();
+  }
+  tendrils(W*0.06,H*0.92, r1,g1,b1, 1,  intensity*0.55);
+  tendrils(W*0.94,H*0.92, r2,g2,b2, -1, intensity*0.55);
 
-    // 1. Calculate DECIMAL ODDS (Match Odds)
-    function calcMatchOdds() {
-        let val = parseFloat(document.getElementById('mo_input').value) || 1.01;
-        if(val < 1.01) val = 1.01;
-        
-        // Auto-calculate Team B based on probability
-        let probA = 1 / val;
-        let probB = 1 - probA;
-        let valB = 1 / probB;
-
-        state.mo_odds.A_back = val;
-        state.mo_odds.A_lay = val + 0.02; // Small spread
-
-        state.mo_odds.B_back = valB - 0.05; // Margin
-        state.mo_odds.B_lay = valB + 0.04;
-        
-        render();
+  // 3. PLAYERS
+  function drawPlayer(img, side) {
+    if(!img){
+      ctx.save(); ctx.globalAlpha=0.12;
+      const px=side==='left'?W*0.01:W*0.45;
+      ctx.fillStyle='#fff';
+      ctx.beginPath(); ctx.roundRect(px,H*0.42,W*0.43,H*0.5,10); ctx.fill();
+      ctx.globalAlpha=0.35; ctx.fillStyle='#fff';
+      ctx.font='bold 28px Montserrat'; ctx.textAlign='center';
+      ctx.fillText('📸 Upload Photo',px+W*0.215,H*0.68);
+      ctx.restore(); return;
     }
+    const ar=img.width/img.height;
+    const dH=H*0.76, dW=dH*ar;
+    const py=H-dH+H*0.03;
+    const px=side==='left'? W*0.01 : W-dW-W*0.01;
+    // foot shadow
+    const fsh=ctx.createRadialGradient(px+dW/2,H*0.98,0,px+dW/2,H*0.98,dW*0.5);
+    fsh.addColorStop(0,'rgba(0,0,0,0.65)'); fsh.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=fsh; ctx.fillRect(px,H*0.88,dW,H*0.12);
+    ctx.drawImage(img,px,py,dW,dH);
+  }
+  drawPlayer(p1,'left');
+  drawPlayer(p2,'right');
 
-    // 2. Calculate BOOKMAKER ODDS (Integer with spread)
-    function calcBookmaker() {
-        let val = parseInt(document.getElementById('bm_input').value) || 0;
-        
-        // In Bookmaker:
-        // Input 65 -> Back 65. Lay = Back + Spread (e.g. 5) -> 70.
-        // Opposite team is roughly (100 - Input) * adjustment
-        
-        state.bm_odds.A_back = val;
-        state.bm_odds.A_lay = val + 5; // The "5p commission" difference you asked for
+  // 4. VS BADGE — 3D gold style like the original
+  const vx=W/2, vy=H*0.56;
+  // outer glow
+  const vsgl=ctx.createRadialGradient(vx,vy,0,vx,vy,200);
+  vsgl.addColorStop(0,'rgba(240,192,50,0.30)'); vsgl.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=vsgl; ctx.beginPath(); ctx.arc(vx,vy,200,0,Math.PI*2); ctx.fill();
 
-        // Auto calc B roughly
-        // If A is 65 (approx 65% chance), B is approx 35ish
-        // We simulate this for the UI
-        let inverse = 100 - val; 
-        // Add some market noise
-        let valB = parseInt(inverse * 2); // Arbitrary scale for bookmaker "rate" style seen in screenshot (132 etc)
-        
-        if(valB < 0) valB = 0;
+  // VS text — large, bold, gold 3D
+  ctx.save();
+  ctx.textAlign='center'; ctx.textBaseline='middle';
 
-        state.bm_odds.B_back = valB;
-        state.bm_odds.B_lay = valB + 6; // slightly wider spread for outsider
+  // shadow layers for 3D
+  const vsSize = 200;
+  ctx.font=`bold ${vsSize}px 'Bebas Neue'`;
+  for(let i=12;i>0;i--){
+    ctx.fillStyle=`rgba(80,40,0,${0.06*i})`;
+    ctx.fillText('VS',vx+i*2,vy+i*2);
+  }
 
-        render();
-    }
+  // stroke outline
+  ctx.strokeStyle='rgba(100,50,0,0.8)'; ctx.lineWidth=8;
+  ctx.strokeText('VS',vx,vy);
 
-    function updateAll() {
-        state.teamA = document.getElementById('teamA_name').value;
-        state.teamB = document.getElementById('teamB_name').value;
-        document.getElementById('disp_title_1').innerText = document.getElementById('market_title_1').value;
-        document.getElementById('disp_title_2').innerText = document.getElementById('market_title_2').value;
-        calcMatchOdds();
-        calcBookmaker();
-    }
+  // gold gradient fill
+  const vsGrad=ctx.createLinearGradient(vx-180,vy-100,vx+180,vy+100);
+  vsGrad.addColorStop(0,'#7a4a00');
+  vsGrad.addColorStop(0.2,'#c8860a');
+  vsGrad.addColorStop(0.45,'#f5d060');
+  vsGrad.addColorStop(0.5,'#fff8c0');
+  vsGrad.addColorStop(0.55,'#f5d060');
+  vsGrad.addColorStop(0.8,'#c8860a');
+  vsGrad.addColorStop(1,'#7a4a00');
+  ctx.fillStyle=vsGrad;
+  ctx.fillText('VS',vx,vy);
+  ctx.restore();
 
-    // --- RENDER UI ---
-    function render() {
-        // Names
-        ['disp_teamA_1', 'disp_teamA_2'].forEach(id => document.getElementById(id).innerText = state.teamA);
-        ['disp_teamB_1', 'disp_teamB_2'].forEach(id => document.getElementById(id).innerText = state.teamB);
+  // thin gold light ray
+  ctx.save();
+  ctx.globalAlpha=0.25;
+  const ray=ctx.createLinearGradient(vx,vy-300,vx,vy+300);
+  ray.addColorStop(0,'rgba(255,220,80,0)');
+  ray.addColorStop(0.5,'rgba(255,220,80,0.6)');
+  ray.addColorStop(1,'rgba(255,220,80,0)');
+  ctx.fillStyle=ray;
+  ctx.fillRect(vx-4,vy-300,8,600);
+  ctx.restore();
 
-        // Match Odds Buttons
-        document.getElementById('mo_back_A').innerText = state.mo_odds.A_back.toFixed(2);
-        document.getElementById('mo_lay_A').innerText = state.mo_odds.A_lay.toFixed(2);
-        document.getElementById('mo_back_B').innerText = state.mo_odds.B_back.toFixed(2);
-        document.getElementById('mo_lay_B').innerText = state.mo_odds.B_lay.toFixed(2);
+  // 5. TAMIL247 TITLE
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.font=`bold 100px 'Bebas Neue'`;
+  // italic-ish with transform
+  ctx.save();
+  ctx.transform(1,0,-0.08,1,0,0); // slight italic skew
+  const titleX=W/2+H*0.08*0.04;
+  const titleGrad=ctx.createLinearGradient(W*0.15,0,W*0.85,0);
+  titleGrad.addColorStop(0,'#7a4a00');
+  titleGrad.addColorStop(0.2,'#c8860a');
+  titleGrad.addColorStop(0.42,'#f5d060');
+  titleGrad.addColorStop(0.5,'#fffacc');
+  titleGrad.addColorStop(0.6,'#f5d060');
+  titleGrad.addColorStop(0.8,'#c8860a');
+  titleGrad.addColorStop(1,'#7a4a00');
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,0.8)'; ctx.font=`bold 100px 'Bebas Neue'`;
+  ctx.fillText('TAMIL247',W/2+5,H*0.118+5);
+  ctx.fillStyle=titleGrad;
+  ctx.fillText('TAMIL247',W/2,H*0.118);
+  ctx.restore();
 
-        // Bookmaker Buttons
-        document.getElementById('bm_back_A').innerText = state.bm_odds.A_back;
-        document.getElementById('bm_lay_A').innerText = state.bm_odds.A_lay;
-        document.getElementById('bm_back_B').innerText = state.bm_odds.B_back;
-        document.getElementById('bm_lay_B').innerText = state.bm_odds.B_lay;
+  // 6. TEAM vs TEAM
+  const t1=document.getElementById('team1').value.toUpperCase()||'GT';
+  const t2=document.getElementById('team2').value.toUpperCase()||'PBKS';
+  const matchLine=`${t1} vs ${t2} 🔥`;
+  ctx.font=`900 ${t1.length+t2.length>8?88:102}px 'Bebas Neue'`;
+  // white with shadow
+  ctx.fillStyle='rgba(0,0,0,0.7)';
+  ctx.fillText(matchLine,W/2+4,H*0.228+4);
+  ctx.fillStyle='#ffffff';
+  ctx.shadowColor='rgba(255,255,255,0.2)'; ctx.shadowBlur=16;
+  ctx.fillText(matchLine,W/2,H*0.228);
+  ctx.shadowBlur=0;
 
-        // PNL Colors
-        updatePnLUI('pnl_A_1', pnl.A);
-        updatePnLUI('pnl_B_1', pnl.B);
-        updatePnLUI('pnl_A_2', pnl.A);
-        updatePnLUI('pnl_B_2', pnl.B);
+  // 7. SUBTITLE
+  const sub=document.getElementById('matchSub').value;
+  ctx.font=`800 72px 'Bebas Neue'`;
+  ctx.fillStyle='rgba(0,0,0,0.65)';
+  ctx.fillText(sub,W/2+3,H*0.316+3);
+  ctx.fillStyle='#ffffff';
+  ctx.fillText(sub,W/2,H*0.316);
 
-        document.getElementById('main-balance').innerText = Math.floor(balance);
-    }
+  // offer line 1
+  const o1=document.getElementById('offer1').value.toUpperCase();
+  if(o1) {
+    ctx.font=`800 34px 'Montserrat'`;
+    const og=ctx.createLinearGradient(W*0.2,0,W*0.8,0);
+    og.addColorStop(0,'#c8860a'); og.addColorStop(0.5,'#f5d060'); og.addColorStop(1,'#c8860a');
+    ctx.fillStyle=og;
+    ctx.fillText(o1,W/2,H*0.362);
+  }
+  const o2=document.getElementById('offer2').value.toUpperCase();
+  if(o2) {
+    ctx.font=`800 30px 'Montserrat'`;
+    ctx.fillStyle='rgba(255,220,100,0.85)';
+    ctx.fillText(o2,W/2,H*0.402);
+  }
 
-    function updatePnLUI(id, val) {
-        const el = document.getElementById(id);
-        el.innerText = val >= 0 ? "+" + val.toFixed(0) : val.toFixed(0);
-        el.className = "pnl " + (val >= 0 ? "green" : "red");
-    }
+  // 8. JOIN NOW BUTTON
+  const bY=H*0.876, bW=500, bH=76, bX=W/2-bW/2, bR=38;
+  ctx.beginPath();
+  ctx.roundRect(bX,bY,bW,bH,bR);
+  const btnG=ctx.createLinearGradient(bX,bY,bX+bW,bY);
+  btnG.addColorStop(0,'#16a34a'); btnG.addColorStop(0.5,'#22c55e'); btnG.addColorStop(1,'#16a34a');
+  ctx.fillStyle=btnG;
+  ctx.shadowColor='rgba(34,197,94,0.55)'; ctx.shadowBlur=22; ctx.fill(); ctx.shadowBlur=0;
+  ctx.fillStyle='#fff'; ctx.font=`900 44px 'Bebas Neue'`;
+  ctx.fillText('JOIN NOW',W/2,bY+46);
 
-    // --- BETTING ---
-    function openSlip(team, type, marketType) {
-        selection = { team, type, marketType };
-        let odds = 0;
-        
-        // Determine Odds
-        if(marketType === 'MO') {
-            if(team === 'A') odds = type === 'back' ? state.mo_odds.A_back : state.mo_odds.A_lay;
-            else odds = type === 'back' ? state.mo_odds.B_back : state.mo_odds.B_lay;
-        } else {
-            // BM Logic
-            if(team === 'A') odds = type === 'back' ? state.bm_odds.A_back : state.bm_odds.A_lay;
-            else odds = type === 'back' ? state.bm_odds.B_back : state.bm_odds.B_lay;
-            
-            // For calculation purposes, Convert BM Integer to Decimal equiv if needed, 
-            // OR treat as "Rate". Usually Rate 65 means: Stake 100 wins 65.
-            // So Decimal = 1.65
-            odds = (odds / 100) + 1;
-        }
+  // 9. WHATSAPP
+  ctx.font=`800 32px 'Montserrat'`;
+  ctx.fillStyle='#ffffff';
+  ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=8;
+  ctx.fillText(`WhatsApp: ${document.getElementById('wa').value}`,W/2,H*0.956);
+  ctx.shadowBlur=0;
 
-        selection.odds = odds;
+  // 10. WEBSITE
+  ctx.font=`700 26px 'Montserrat'`;
+  ctx.fillStyle='rgba(255,255,255,0.55)';
+  ctx.fillText(document.getElementById('site').value,W/2,H*0.978);
+}
 
-        // UI Setup
-        const overlay = document.getElementById('overlay');
-        const slip = document.getElementById('betslip');
-        const btn = document.getElementById('placeBtn');
-        const title = document.getElementById('slip-title');
+// ── DOWNLOAD ──
+function downloadPoster() {
+  renderPoster();
+  setTimeout(()=>{
+    const a=document.createElement('a');
+    a.download='tamil247-poster.png';
+    a.href=document.getElementById('poster').toDataURL('image/png');
+    a.click(); status('✅ Downloaded!');
+  },150);
+}
 
-        overlay.style.display = 'block';
-        setTimeout(() => slip.classList.add('active'), 10); // Anim
+function status(msg) {
+  document.getElementById('status').textContent=msg;
+  if(msg) setTimeout(()=>{ document.getElementById('status').textContent=''; },3500);
+}
 
-        document.getElementById('slip-odds').innerText = marketType === 'BM' ? (odds-1)*100 : odds.toFixed(2);
-        
-        let teamName = team === 'A' ? state.teamA : state.teamB;
-        title.innerText = (type === 'back' ? "BACK " : "LAY ") + teamName;
-        
-        if(type === 'back') {
-            btn.style.backgroundColor = "var(--back-blue)";
-            title.style.color = "var(--back-blue)";
-        } else {
-            btn.style.backgroundColor = "var(--lay-pink)";
-            title.style.color = "var(--lay-pink)";
-        }
-    }
+// Live text updates
+['team1','team2','matchSub','offer1','offer2','wa','site'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',renderPoster);
+});
 
-    function closeSlip() {
-        const slip = document.getElementById('betslip');
-        slip.classList.remove('active');
-        setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
-    }
-
-    function addStake(amt) {
-        const el = document.getElementById('stake');
-        let curr = parseFloat(el.value) || 0;
-        el.value = curr + amt;
-    }
-
-    function confirmBet() {
-        const stake = parseFloat(document.getElementById('stake').value);
-        if(!stake || stake <= 0) return;
-
-        // Simple PnL Logic
-        // Back A: A(+Profit), B(-Stake)
-        // Lay A: A(-Liability), B(+Stake)
-        
-        let profit = stake * (selection.odds - 1);
-        let liability = profit; // For lay
-
-        if(selection.type === 'back') {
-            if(selection.team === 'A') {
-                pnl.A += profit;
-                pnl.B -= stake;
-            } else {
-                pnl.B += profit;
-                pnl.A -= stake;
-            }
-        } else {
-            if(selection.team === 'A') {
-                pnl.A -= liability;
-                pnl.B += stake;
-            } else {
-                pnl.B -= liability;
-                pnl.A += stake;
-            }
-        }
-
-        closeSlip();
-        render();
-    }
-
-    function doCashout(marketType) {
-        // Simple visual simulation of cashout
-        // Flattens the green book
-        let total = (pnl.A + pnl.B) / 2; // Rough avg
-        if(total < 0) total = 0; 
-        
-        balance += total;
-        pnl.A = 0;
-        pnl.B = 0;
-        alert("Cashed out: " + total.toFixed(0));
-        render();
-    }
-
-    // Start
-    init();
-
+// Init
+loadDefaultBg();
 </script>
 </body>
 </html>
